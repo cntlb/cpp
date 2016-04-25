@@ -1,0 +1,54 @@
+do not move any files in list directory.
+
+compile attentions:
+
+1. stack.c -> libstack.so
+	1) stack.c -> stack.o, generate compiled file, but not linked.
+			gcc -c -fPIC -o stack.o stack.c
+	
+		-c表示只编译(compile)，而不连接。-o选项用于说明输出(output)文件名。gcc将生成一个目标(object)文件mystack.o。
+		注意-fPIC选项。PIC指Position Independent Code。共享库要求有此选项，以便实现动态连接(dynamic linking)。
+	2) stack.o -> libstack.so
+			gcc -shared -o libstack.so stack.o
+
+		库文件以lib开始。共享库文件以.so为后缀。-shared表示生成一个共享库。
+	3)stack.c -> libstack.so
+		gcc -shared -fPIC -o libstack.so stack.c
+
+2. test.c -> test executable file
+		gcc -g -o test test.c -lmystack -L. -Wl,-rpath=.
+
+
+	尽管我们成功编译了test可执行文件，但很有可能不能执行。一个可能是权限问题。我们需要有执行该文件的权限，见Linux文件管理背景知识
+	另一个情况是:
+	./test: error while loading shared libraries: libmystack.so: cannot open shared object file: No such file or directory
+	这是因为操作系统无法找到库。libmystack.so位于当前路径，位于库文件的默认路径之外。尽管我们在编译时(compile time)提供了.so文件的位置，但这个信息并没有写入test可执行文件(runtime)。可以使用下面命令测试:
+
+	$ldd test
+
+	ldd用于显示可执行文件所依赖的库。显示:
+
+		linux-vdso.so.1 =>  (0x00007fff31dff000)
+		libmystack.so => not found
+		libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fca30de7000)
+		/lib64/ld-linux-x86-64.so.2 (0x00007fca311cb000)
+	这说明test可执行文件无法找到它所需的libmystack.so库文件。
+
+	为了解决上面的问题，我们可以将.so文件放入默认搜索路径中。但有时，特别是多用户环境下，我们不享有在默认搜索路径写入的权限。
+
+	一个解决方案是设置LD_LIBRARY_PATH环境变量。比如:
+
+	$export LD_LIBRARY_PATH=.
+
+	这样，可执行文件执行时，操作系统将在先在LD_LIBRARY_PATH下搜索库文件，再到默认路径中搜索。环境变量的坏处是，它会影响所有的可执行程序。如果我们在编译其他程序时，如果我们不小心，很可能导致其他可执行文件无法运行。因此，LD_LIBRARY_PATH环境变量多用于测试。
+
+	另一个解决方案，即提供-rpath选项，将搜索路径信息写入test文件(rpath代表runtime path)。这样就不需要设置环境变量。这样做的坏处是，如果库文件移动位置，我们需要重新编译test。使用如下命令编译test.c:
+
+	$gcc -g -o test test.c -lmystack -L. -Wl,-rpath=.
+
+	-Wl表示，-rpath选项是传递给连接器(linker)。
+
+3. see http://www.cnblogs.com/vamei/archive/2013/04/04/2998850.html
+
+
+	
