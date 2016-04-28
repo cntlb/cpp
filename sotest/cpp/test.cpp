@@ -4,6 +4,18 @@
 
 using namespace std;
 
+class student{
+public:
+	int age;
+	string name;
+	string addr;
+	void display(){
+		cout <<"age:"<<age<<endl
+	 		 <<"name:"<<name<<endl
+			 <<"address:"<<addr<<endl;
+	}
+};
+
 //test libstu.so
 int main(void)
 {
@@ -27,18 +39,14 @@ int main(void)
 	//So,the right type without class pionter  
 	cout<< student_static_addEii(10, 20) << endl;
 
+	typedef student* (*GetInstance)();
+	GetInstance getInstance;
+	getInstance = (GetInstance)dlsym(handle, "_ZN7student11getInstanceEv");
+	student* s = getInstance();
+	s->display();//ok
+
 	//*************************test constructor*******************************
-	class student{
-	public:
-		int age;
-		string name;
-		string addr;
-		void display(){
-			cout <<"age:"<<age<<endl
-		 		 <<"name:"<<name<<endl
-				 <<"address:"<<addr<<endl;
-		}
-	};
+
 	typedef student* (*Constructor)(student*);
 	Constructor c;
 	c = (Constructor)dlsym(handle, "_ZN7studentC2Ev");

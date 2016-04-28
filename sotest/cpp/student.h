@@ -14,4 +14,5 @@ public:
 	string getAddr();
 	static int getNum();
 	static int add(int a, int b);
+	static student* getInstance();
 };

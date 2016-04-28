@@ -2,7 +2,7 @@
 #include "student.h"
 
 //测试的方便,设置了非默认的初值
-student::student():age(30),name("origin name"),addr("china"){
+student::student():age(30),name("origin name"),addr("China"){
 }
 
 student::student(int age,string name,string addr){
@@ -25,6 +25,10 @@ int student::getNum(){
 //static function2
 int student::add(int a, int b){
 	return a+b;
+}
+
+student* student::getInstance(){
+	return new student(50, "getInstance", "Earth");
 }
 
 
