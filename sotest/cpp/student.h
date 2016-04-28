@@ -1,14 +1,17 @@
 #include <string>
-#include "address.h"
-
+//#include "address.h"
+using namespace std;
 class student{
 public:
 	int age;
-	std::string name;
-	address addr;
+	string name;
+	string addr;
+	
 public:
 	student();
-	student(int age,string name,address addr);
-	void setAddr(address addr);
-	address getAddr();
-}
+	student(int age,string name,string addr);
+	void setAddr(string addr);
+	string getAddr();
+	static int getNum();
+	static int add(int a, int b);
+};

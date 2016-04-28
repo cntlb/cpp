@@ -1,0 +1,9 @@
+1. student.cpp -> libstu.so
+		g++ -shared -fPIC -o libstu.so student.cpp
+
+2. 查找符号
+	使用ida pro打开so文件查看即可
+
+3. 编译运行test.cpp
+		g++ test.cpp -ldl
+	使用dlfcn.h需要链接动态库libdl.so
