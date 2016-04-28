@@ -45,6 +45,14 @@ int main(void)
 	student* s = getInstance();
 	s->display();//ok
 
+	/*
+	typedef student* (*GetInstanceE)(student*);
+	GetInstanceE getInstanceE = (GetInstanceE)getInstance;
+	student* s1 = NULL;
+	getInstanceE(s1);
+	s1->display();//Segmentation fault
+	*/
+
 	//*************************test constructor*******************************
 
 	typedef student* (*Constructor)(student*);
