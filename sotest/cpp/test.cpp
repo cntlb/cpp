@@ -1,6 +1,7 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 
@@ -25,7 +26,7 @@ int main(void)
 		exit(1);
 	}
  	
-	//**********************test static function*********************
+	cout<<"**********************test static function*********************"<<endl;
 	// get static symbol
 	// just 1 parameter, both int (*)() and int (*)(void*) are ok
 	int (*student_static_getNumEv)();
@@ -46,14 +47,14 @@ int main(void)
 	s->display();//ok
 
 	/*
-	typedef student* (*GetInstanceE)(student*);
+	typedef student* (*GetInstanceE)(void*);
 	GetInstanceE getInstanceE = (GetInstanceE)getInstance;
-	student* s1 = NULL;
+	student *s1;
 	getInstanceE(s1);
-	s1->display();//Segmentation fault
+	s1->display();//不是预期的对象
 	*/
 
-	//*************************test constructor*******************************
+	cout<<"*************************test constructor*******************************"<<endl;
 
 	typedef student* (*Constructor)(student*);
 	Constructor c;
@@ -66,6 +67,11 @@ int main(void)
 					name:origin name
 					address:china
 					*/
+	/*
+	student* stu1 = new student;
+	stu1 = c(stu1);
+	stu1->display();//Segmentation fault
+	*/
 
 	typedef void (*Constructor2)(student*);
 	Constructor2 c2 = (Constructor2)c;

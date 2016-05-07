@@ -1,5 +1,4 @@
 #include <string>
-//#include "address.h"
 using namespace std;
 class student{
 public:
@@ -10,6 +9,7 @@ public:
 public:
 	student();
 	student(int age,string name,string addr);
+	int getAge();
 	void setAddr(string addr);
 	string getAddr();
 	static int getNum();

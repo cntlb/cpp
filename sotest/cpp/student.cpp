@@ -2,14 +2,16 @@
 #include "student.h"
 
 //测试的方便,设置了非默认的初值
-student::student():age(30),name("origin name"),addr("China"){
-}
+student::student():age(30),name("origin name"),addr("China"){}
 
 student::student(int age,string name,string addr){
 	this->age = age;
 	this->name = name;
 	this->addr = addr;
 }
+
+int student::getAge(){ return age;}
+
 void student::setAddr(string addr){
 	this->addr = addr;
 }
